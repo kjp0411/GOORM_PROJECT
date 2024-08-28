@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:goorm_project/main_view_model.dart'; // MainViewModel import
+import 'package:goorm_project/kakao_login.dart'; // KakaoLogin import
+import 'package:goorm_project/mypage.dart'; // MyPage import
+import 'package:provider/provider.dart'; // Provider import
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -25,6 +29,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<MainViewModel>(context); // Use provided MainViewModel
+
     return Scaffold(
       appBar: AppBar(
         title: Text('냥냠집'),
@@ -32,7 +38,7 @@ class _MainPageState extends State<MainPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 카테고리
+            // 카테고리 버튼 섹션
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Wrap(
@@ -42,7 +48,7 @@ class _MainPageState extends State<MainPage> {
                   CategoryButton(
                     iconPath: 'assets/images/custom_icon.png',
                     isSelected: false,
-                    onTap: () {}, // 이미지 버튼이므로 클릭 이벤트가 필요 없다면 빈 함수로 설정
+                    onTap: () {},
                   ),
                   CategoryButton(
                     label: '추천',
@@ -87,10 +93,11 @@ class _MainPageState extends State<MainPage> {
             Section(
               title: '맛집 리스트',
               onTap: () {
-                // 상세 리스트 페이지로 이동
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DetailPage(title: '맛집 리스트 전체보기')),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          DetailPage(title: '맛집 리스트 전체보기')),
                 );
               },
             ),
@@ -98,10 +105,11 @@ class _MainPageState extends State<MainPage> {
             Section(
               title: '맛집 일기',
               onTap: () {
-                // 상세 일기 페이지로 이동
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DetailPage(title: '맛집 일기 전체보기')),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          DetailPage(title: '맛집 일기 전체보기')),
                 );
               },
             ),
@@ -118,11 +126,20 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: '더보기'),
         ],
         selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey, // 선택되지 않은 아이콘의 색상 설정
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          if (index == 3) { // 마이페이지 탭이 선택된 경우
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyPage()), // MyPage로 이동
+            );
+          }
+        },
       ),
     );
   }
 }
+
 
 class CategoryButton extends StatelessWidget {
   final String? label;

@@ -1,7 +1,8 @@
 import 'package:goorm_project/social_login.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:flutter/foundation.dart'; // ChangeNotifier를 사용하기 위해 필요
 
-class MainViewModel {
+class MainViewModel extends ChangeNotifier { // ChangeNotifier를 상속받음
   final SocialLogin _socialLogin;
   bool isLogined = false;
   User? user;
@@ -13,14 +14,13 @@ class MainViewModel {
       isLogined = await _socialLogin.login();
       if (isLogined) {
         user = await UserApi.instance.me(); // 로그인 성공 시 사용자 정보 요청
-
-        // 사용자 정보 출력
-        printUserInfo(user);
+        notifyListeners(); // 상태가 변경되었음을 알림
       }
     } catch (e) {
       print("로그인 중 오류 발생: $e");
       isLogined = false;
       user = null;
+      notifyListeners(); // 상태가 변경되었음을 알림
     }
   }
 
@@ -29,12 +29,12 @@ class MainViewModel {
       await _socialLogin.logout();
       isLogined = false;
       user = null;
+      notifyListeners(); // 상태가 변경되었음을 알림
     } catch (e) {
       print("로그아웃 중 오류 발생: $e");
     }
   }
 
-  // 사용자 정보 출력 함수
   void printUserInfo(User? user) {
     if (user != null) {
       String? nickname = user.kakaoAccount?.profile?.nickname;
