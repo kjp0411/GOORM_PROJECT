@@ -20,9 +20,14 @@ class MyPage extends StatelessWidget {
           children: <Widget>[
             // 프로필 이미지가 있을 경우 표시
             if (viewModel.user?.kakaoAccount?.profile?.profileImageUrl != null)
-              Image.network(viewModel.user!.kakaoAccount!.profile!.profileImageUrl!)
+              Image.network(
+                viewModel.user!.kakaoAccount!.profile!.profileImageUrl!,
+                width: 50,  // 이미지의 너비를 50으로 설정
+                height: 50, // 이미지의 높이를 50으로 설정
+                fit: BoxFit.cover, // 이미지를 꽉 채우도록 설정
+              )
             else
-              const Icon(Icons.account_circle, size: 100),
+              const Icon(Icons.account_circle, size: 50), // 아이콘의 크기를 50으로 설정
 
             const SizedBox(height: 20),
 
