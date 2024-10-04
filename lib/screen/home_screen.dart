@@ -3,6 +3,7 @@ import 'package:goorm_project/main_view_model.dart'; // MainViewModel import
 import 'package:goorm_project/kakao_login.dart'; // KakaoLogin import
 import 'package:goorm_project/mypage.dart'; // MyPage import
 import 'package:provider/provider.dart'; // Provider import
+import 'package:goorm_project/screen/upload.dart'; // UploadPage import
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -19,103 +20,30 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  String selectedCategory = '추천';
+  int _selectedIndex = 0;
 
-  void selectCategory(String category) {
+  // 탭별 페이지 위젯 리스트
+  static const List<Widget> _pages = <Widget>[
+    HomeTab(), // 홈
+    DetailPage(title: '맛집 일기'), // 맛집 일기
+    BulletinBoardPage(), // 게시판
+    MyPage(), // 마이페이지
+    MorePage(), // 더보기
+  ];
+
+  void _onItemTapped(int index) {
     setState(() {
-      selectedCategory = category;
+      _selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<MainViewModel>(context); // Use provided MainViewModel
-
     return Scaffold(
       appBar: AppBar(
         title: Text('냥냠집'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // 카테고리 버튼 섹션
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Wrap(
-                spacing: 16.0,
-                alignment: WrapAlignment.spaceAround,
-                children: [
-                  CategoryButton(
-                    iconPath: 'assets/images/custom_icon.png',
-                    isSelected: false,
-                    onTap: () {},
-                  ),
-                  CategoryButton(
-                    label: '추천',
-                    isSelected: selectedCategory == '추천',
-                    onTap: () => selectCategory('추천'),
-                    fontSize: 20.0,
-                  ),
-                  CategoryButton(
-                    label: '한식',
-                    isSelected: selectedCategory == '한식',
-                    onTap: () => selectCategory('한식'),
-                    fontSize: 20.0,
-                  ),
-                  CategoryButton(
-                    label: '중식',
-                    isSelected: selectedCategory == '중식',
-                    onTap: () => selectCategory('중식'),
-                    fontSize: 20.0,
-                  ),
-                  CategoryButton(
-                    label: '양식',
-                    isSelected: selectedCategory == '양식',
-                    onTap: () => selectCategory('양식'),
-                    fontSize: 20.0,
-                  ),
-                  CategoryButton(
-                    label: '분식',
-                    isSelected: selectedCategory == '분식',
-                    onTap: () => selectCategory('분식'),
-                    fontSize: 20.0,
-                  ),
-                  CategoryButton(
-                    label: '일식',
-                    isSelected: selectedCategory == '일식',
-                    onTap: () => selectCategory('일식'),
-                    fontSize: 20.0,
-                  ),
-                ],
-              ),
-            ),
-            // 맛집 리스트 섹션
-            Section(
-              title: '맛집 리스트',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          DetailPage(title: '맛집 리스트 전체보기')),
-                );
-              },
-            ),
-            // 맛집 일기 섹션
-            Section(
-              title: '맛집 일기',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          DetailPage(title: '맛집 일기 전체보기')),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      body: _pages[_selectedIndex], // 선택된 인덱스에 따른 페이지 표시
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
@@ -125,21 +53,115 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: '마이페이지'),
           BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: '더보기'),
         ],
+        currentIndex: _selectedIndex, // 현재 선택된 인덱스
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          if (index == 3) { // 마이페이지 탭이 선택된 경우
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyPage()), // MyPage로 이동
-            );
-          }
-        },
+        onTap: _onItemTapped, // 탭 선택 시 해당 인덱스에 맞는 페이지로 이동
       ),
+// 맛집 일기 탭 선택 시 플로팅 액션 버튼 표시
+      floatingActionButton: _selectedIndex == 1
+          ? FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UploadPage()),
+          );
+        },
+        child: Icon(Icons.add),
+      )
+          : null,
     );
   }
 }
 
+class HomeTab extends StatelessWidget {
+  const HomeTab({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // 카테고리 버튼 섹션
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Wrap(
+              spacing: 16.0,
+              alignment: WrapAlignment.spaceAround,
+              children: [
+                CategoryButton(
+                  iconPath: 'assets/images/custom_icon.png',
+                  isSelected: false,
+                  onTap: () {},
+                ),
+                CategoryButton(
+                  label: '추천',
+                  isSelected: true,
+                  onTap: () {},
+                  fontSize: 20.0,
+                ),
+                CategoryButton(
+                  label: '한식',
+                  isSelected: false,
+                  onTap: () {},
+                  fontSize: 20.0,
+                ),
+                CategoryButton(
+                  label: '중식',
+                  isSelected: false,
+                  onTap: () {},
+                  fontSize: 20.0,
+                ),
+                CategoryButton(
+                  label: '양식',
+                  isSelected: false,
+                  onTap: () {},
+                  fontSize: 20.0,
+                ),
+                CategoryButton(
+                  label: '분식',
+                  isSelected: false,
+                  onTap: () {},
+                  fontSize: 20.0,
+                ),
+                CategoryButton(
+                  label: '일식',
+                  isSelected: false,
+                  onTap: () {},
+                  fontSize: 20.0,
+                ),
+              ],
+            ),
+          ),
+          // 맛집 리스트 섹션
+          Section(
+            title: '맛집 리스트',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                    const DetailPage(title: '맛집 리스트 전체보기')),
+              );
+            },
+          ),
+          // 맛집 일기 섹션
+          Section(
+            title: '맛집 일기',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                    const DetailPage(title: '맛집 일기 전체보기')),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class CategoryButton extends StatelessWidget {
   final String? label;
@@ -199,7 +221,8 @@ class Section extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const Section({Key? key, required this.title, required this.onTap}) : super(key: key);
+  const Section({Key? key, required this.title, required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -213,11 +236,11 @@ class Section extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               GestureDetector(
                 onTap: onTap,
-                child: Text(
+                child: const Text(
                   '전체보기 >',
                   style: TextStyle(color: Colors.blue),
                 ),
@@ -253,11 +276,37 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
+
       body: Center(
         child: Text('상세 페이지: $title'),
+      ),
+    );
+  }
+}
+
+class BulletinBoardPage extends StatelessWidget {
+  const BulletinBoardPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: const Center(
+        child: Text("게시판 내용"),
+      ),
+    );
+  }
+}
+
+
+
+class MorePage extends StatelessWidget {
+  const MorePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: const Center(
+        child: Text("더보기 페이지 내용"),
       ),
     );
   }

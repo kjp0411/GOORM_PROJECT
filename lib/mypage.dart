@@ -11,9 +11,6 @@ class MyPage extends StatelessWidget {
     final viewModel = Provider.of<MainViewModel>(context); // MainViewModel 접근
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('마이페이지'),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
