@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
+import '../dto/diaries_info.dart';
+
 class UploadPage extends StatefulWidget {
   @override
   _UploadPageState createState() => _UploadPageState();
@@ -48,6 +50,28 @@ class _UploadPageState extends State<UploadPage> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("업로드 실패")));
     }
   }
+
+  // // 예시 전송
+  // Future<void> postDiaryInfo(DiaryInfo diaryInfo) async {
+  //   final response = await http.post(
+  //     Uri.parse('url/diaries'),
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: json.encode({
+  //       'id': diaryInfo.id,
+  //       'images': diaryInfo.images,
+  //       'comments': diaryInfo.comments,
+  //       'publicRange': diaryInfo.publicRange,
+  //       'category': diaryInfo.category,
+  //       'userId': diaryInfo.userId,
+  //       'grade': diaryInfo.grade,
+  //       'recommend': diaryInfo.recommend,
+  //     }),
+  //   );
+  //
+  //   if (response.statusCode != 200) {
+  //     throw Exception('Failed to post diary info');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
