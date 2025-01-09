@@ -22,14 +22,43 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
-  // 탭별 페이지 위젯 리스트
-  static const List<Widget> _pages = <Widget>[
-    HomeTab(), // 홈
-    DetailPage(title: '맛집 일기'), // 맛집 일기
-    BulletinBoardPage(), // 게시판
-    MyPage(), // 마이페이지
-    MorePage(), // 더보기
+  // 맛집 리스트와 맛집 일기 리스트를 정의 (이름과 이미지 경로 포함)
+  final List<Map<String, String>> restaurantList = [
+    {'name': '맛집 A', 'image': 'assets/images/a.png'},
+    {'name': '맛집 B', 'image': 'assets/images/a.png'}, // 이미지가 없는 경우 빈 문자열로
+    {'name': '맛집 C', 'image': 'assets/images/a.png'},
+    {'name': '맛집 D', 'image': 'assets/images/a.png'},
+    {'name': '맛집 리스트 테스트', 'image': 'assets/images/a.png'},
   ];
+
+  final List<Map<String, String>> diaryRestaurantList = [
+    {'name': '맛집 E', 'image': 'assets/images/a.png'},
+    {'name': '맛집 F', 'image': 'assets/images/a.png'},
+    {'name': '맛집 G', 'image': 'assets/images/a.png'},
+    {'name': '맛집 일기 테스트', 'image': 'assets/images/a.png'},
+  ];
+
+  // 탭별 페이지 위젯 리스트
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      HomeTab(
+        restaurantList: restaurantList,
+        diaryRestaurantList: diaryRestaurantList, // 맛집 일기 리스트 전달
+      ),
+      DetailPage(
+        title: '맛집 일기 전체보기',
+        restaurantList: diaryRestaurantList,
+        showAppBar: true,
+      ),
+      BulletinBoardPage(), // 게시판
+      MyPage(), // 마이페이지
+      MorePage(), // 더보기
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -40,7 +69,9 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: _selectedIndex == 1
+          ? null // 맛집 일기 탭에서는 AppBar 숨김
+          : AppBar(
         title: Text('냥냠집'),
       ),
       body: _pages[_selectedIndex], // 선택된 인덱스에 따른 페이지 표시
@@ -58,7 +89,6 @@ class _MainPageState extends State<MainPage> {
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped, // 탭 선택 시 해당 인덱스에 맞는 페이지로 이동
       ),
-// 맛집 일기 탭 선택 시 플로팅 액션 버튼 표시
       floatingActionButton: _selectedIndex == 1
           ? FloatingActionButton(
         onPressed: () {
@@ -75,14 +105,16 @@ class _MainPageState extends State<MainPage> {
 }
 
 class HomeTab extends StatelessWidget {
-  const HomeTab({Key? key}) : super(key: key);
+  final List<Map<String, String>> restaurantList;
+  final List<Map<String, String>> diaryRestaurantList; // 맛집 일기 리스트 추가
+
+  const HomeTab({Key? key, required this.restaurantList, required this.diaryRestaurantList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // 카테고리 버튼 섹션
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Wrap(
@@ -133,27 +165,35 @@ class HomeTab extends StatelessWidget {
               ],
             ),
           ),
-          // 맛집 리스트 섹션
           Section(
             title: '맛집 리스트',
+            restaurantList: restaurantList, // restaurantList 데이터 전달
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                    const DetailPage(title: '맛집 리스트 전체보기')),
+                  builder: (context) => DetailPage(
+                    title: '맛집 리스트 전체보기',
+                    restaurantList: restaurantList,
+                    showAppBar: true,
+                  ),
+                ),
               );
             },
           ),
-          // 맛집 일기 섹션
           Section(
             title: '맛집 일기',
+            restaurantList: diaryRestaurantList, // 맛집 일기 리스트 전달
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                    const DetailPage(title: '맛집 일기 전체보기')),
+                  builder: (context) => DetailPage(
+                    title: '맛집 일기 전체보기',
+                    restaurantList: diaryRestaurantList,
+                    showAppBar: true,
+                  ),
+                ),
               );
             },
           ),
@@ -219,10 +259,15 @@ class CategoryButton extends StatelessWidget {
 
 class Section extends StatelessWidget {
   final String title;
+  final List<Map<String, String>> restaurantList;
   final VoidCallback onTap;
 
-  const Section({Key? key, required this.title, required this.onTap})
-      : super(key: key);
+  const Section({
+    Key? key,
+    required this.title,
+    required this.restaurantList,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -251,12 +296,25 @@ class Section extends StatelessWidget {
             height: 150,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 5,
+              itemCount: restaurantList.length,
               itemBuilder: (context, index) {
+                final imagePath = restaurantList[index]['image']!.isEmpty
+                    ? 'assets/images/default.png' // 기본 이미지 경로
+                    : restaurantList[index]['image']!;
                 return Card(
-                  child: Container(
-                    width: 150,
-                    child: Center(child: Text('$title 항목 ${index + 1}')),
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        imagePath,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(restaurantList[index]['name']!),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -270,15 +328,83 @@ class Section extends StatelessWidget {
 
 class DetailPage extends StatelessWidget {
   final String title;
+  final List<Map<String, String>> restaurantList;
+  final bool showAppBar;
 
-  const DetailPage({Key? key, required this.title}) : super(key: key);
+  const DetailPage({
+    Key? key,
+    required this.title,
+    required this.restaurantList,
+    this.showAppBar = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body: Center(
-        child: Text('상세 페이지: $title'),
+      appBar: showAppBar ? AppBar(title: Text(title)) : null,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 8.0,
+            mainAxisSpacing: 8.0,
+            childAspectRatio: 0.8,
+          ),
+          itemCount: restaurantList.length,
+          itemBuilder: (context, index) {
+            final imagePath = restaurantList[index]['image']!.isEmpty
+                ? 'assets/images/default.png' // 기본 이미지 경로
+                : restaurantList[index]['image']!;
+            return Card(
+              margin: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        image: DecorationImage(
+                          image: AssetImage(imagePath),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      restaurantList[index]['name']!,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.thumb_up),
+                          onPressed: () {},
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.bookmark),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -296,8 +422,6 @@ class BulletinBoardPage extends StatelessWidget {
     );
   }
 }
-
-
 
 class MorePage extends StatelessWidget {
   const MorePage({Key? key}) : super(key: key);
