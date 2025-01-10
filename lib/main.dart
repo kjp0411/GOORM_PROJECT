@@ -46,23 +46,30 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            await viewModel.login();
-            if (viewModel.isLogined) {
-              // 로그인에 성공하면 HomeScreen으로 이동
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
-            } else {
-              // 로그인 실패 시 메시지 출력
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('로그인에 실패했습니다. 다시 시도해 주세요.')),
-              );
-            }
-          },
-          child: const Text('Login'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset('assets/images/logo.png', width: 100, height: 100), // Add logo image
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                await viewModel.login();
+                if (viewModel.isLogined) {
+                  // 로그인에 성공하면 HomeScreen으로 이동
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+                } else {
+                  // 로그인 실패 시 메시지 출력
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('로그인에 실패했습니다. 다시 시도해 주세요.')),
+                  );
+                }
+              },
+              child: const Text('Login'),
+            ),
+          ],
         ),
       ),
     );

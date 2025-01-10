@@ -9,6 +9,9 @@ class KakaoLogin implements SocialLogin {
       if (isInstalled) {
         try {
           await UserApi.instance.loginWithKakaoTalk();
+          // JWT 토큰을 받아오는 부분
+          AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
+          print('JWT Token: ${tokenInfo.id}');
           return true;
         } catch (e) {
           return false;
@@ -16,6 +19,9 @@ class KakaoLogin implements SocialLogin {
       } else {
         try {
           await UserApi.instance.loginWithKakaoAccount();
+          // JWT 토큰을 받아오는 부분
+          AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
+          print('JWT Token: ${tokenInfo.id}');
           return true;
         } catch (e) {
           return false;
