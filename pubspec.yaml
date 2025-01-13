@@ -59,7 +59,15 @@ flutter:
   assets:
     - assets/images/custom_icon.png
     - assets/images/a.png
-    - assets/images/logo.png
+    - assets/images/b.png
+    - assets/images/c.png
+    - assets/images/logo1.png
+    - assets/images/한식.png
+    - assets/images/중식.png
+    - assets/images/분식.png
+    - assets/images/패스트푸드.png
+    - assets/images/일식.png
+    - assets/images/디저트.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

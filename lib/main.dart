@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset('assets/images/logo.png', width: 100, height: 100), // Add logo image
+            Image.asset('assets/images/logo1.png', width: 100, height: 100), // Add logo image
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
