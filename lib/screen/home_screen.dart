@@ -23,7 +23,7 @@ class _MainPageState extends State<MainPage> {
   int _selectedCategoryIndex = 0; // 카테고리 선택 인덱스 (홈, 한식 등)
   int _selectedNavIndex = 0; // 네비게이션 선택 인덱스 (홈, 맛집일기 등)
 
-  // 맛집 리스트와 맛집 일기 리스트를 정의 (이름과 이미지 경로 포함)
+// 맛집 리스트와 맛집 일기 리스트를 정의 (이름과 이미지 경로 포함)
   final List<Map<String, dynamic>> categories = [
     {'label': '추천', 'iconPath': 'assets/images/custom_icon.png'},
     {'label': '한식', 'iconPath': 'assets/images/한식.png'},
@@ -36,22 +36,21 @@ class _MainPageState extends State<MainPage> {
 
   final List<Map<String, dynamic>> restaurantList = [
     {'name': '맛집 A', 'image': 'assets/images/a.png'}, // 이미지 경로 추가
-    {'name': '맛집 B', 'image': 'assets/images/b.png'},
-    {'name': '맛집 C', 'image': 'assets/images/c.png'},
+    {'name': '맛집 A', 'image': 'assets/images/b.png'},
+    {'name': '맛집 A', 'image': 'assets/images/c.png'},
     {'name': '맛집 A', 'image': 'assets/images/a.png'}, // 이미지 경로 추가
-    {'name': '맛집 B', 'image': 'assets/images/b.png'},
-    {'name': '맛집 C', 'image': 'assets/images/c.png'},
+    {'name': '맛집 A', 'image': 'assets/images/b.png'},
+    {'name': '맛집 A', 'image': 'assets/images/c.png'},
   ];
 
   final List<Map<String, String>> diaryRestaurantList = [
-    {'name': '맛집 A', 'image': 'assets/images/a.png'}, // 이미지 경로 추가
-    {'name': '맛집 B', 'image': 'assets/images/b.png'},
+    {'name': '맛집 C', 'image': 'assets/images/a.png'}, // 이미지 경로 추가
+    {'name': '맛집 C', 'image': 'assets/images/b.png'},
     {'name': '맛집 C', 'image': 'assets/images/c.png'},
-    {'name': '맛집 A', 'image': 'assets/images/a.png'}, // 이미지 경로 추가
-    {'name': '맛집 B', 'image': 'assets/images/b.png'},
+    {'name': '맛집 C', 'image': 'assets/images/a.png'}, // 이미지 경로 추가
+    {'name': '맛집 C', 'image': 'assets/images/b.png'},
     {'name': '맛집 C', 'image': 'assets/images/c.png'},
   ];
-
 
   final List<Widget> _pages = [];
 
@@ -69,14 +68,17 @@ class _MainPageState extends State<MainPage> {
       WesternFoodPage(),
       JapaneseFoodPage(),
       DessertPage(),
-      DetailPage(title: '맛집 일기 전체보기',
+      DetailPage(
+        title: '맛집 일기 전체보기',
         restaurantList: diaryRestaurantList,
-        showAppBar: true,),
+        showAppBar: false,
+      ),
       BulletinBoardPage(), // 게시판
       MyPage(), // 마이페이지
       MorePage(), // 더보기
     ]);
   }
+
   void _onCategoryTapped(int index) {
     setState(() {
       _selectedCategoryIndex = index; // 카테고리 선택 시 업데이트
@@ -95,38 +97,39 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: const Text(
           '냥냠집',
-          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(
+              fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         backgroundColor: Colors.yellow,
       ),
       body: _selectedNavIndex == 0 // "홈" 탭일 때 카테고리 화면 표시
           ? Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              spacing: 16.0,
-              alignment: WrapAlignment.spaceAround,
-              children: List.generate(categories.length, (index) {
-                return CategoryButton(
-                  label: categories[index]['label'],
-                  iconPath: categories[index]['iconPath'],
-                  isSelected: _selectedCategoryIndex == index,
-                  onTap: () {
-                    setState(() {
-                      _selectedCategoryIndex = index; // 카테고리 버튼 클릭 시 변경
-                    });
-                  },
-                  fontSize: 20.0,
-                );
-              }),
-            ),
-          ),
-          Expanded(
-            child: _buildCategoryPage(), // 선택된 카테고리에 맞는 페이지
-          ),
-        ],
-      )
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Wrap(
+                    spacing: 16.0,
+                    alignment: WrapAlignment.spaceAround,
+                    children: List.generate(categories.length, (index) {
+                      return CategoryButton(
+                        label: categories[index]['label'],
+                        iconPath: categories[index]['iconPath'],
+                        isSelected: _selectedCategoryIndex == index,
+                        onTap: () {
+                          setState(() {
+                            _selectedCategoryIndex = index; // 카테고리 버튼 클릭 시 변경
+                          });
+                        },
+                        fontSize: 20.0,
+                      );
+                    }),
+                  ),
+                ),
+                Expanded(
+                  child: _buildCategoryPage(), // 선택된 카테고리에 맞는 페이지
+                ),
+              ],
+            )
           : _buildNavigationPage(), // 네비게이션 탭 페이지
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -144,14 +147,15 @@ class _MainPageState extends State<MainPage> {
       ),
       floatingActionButton: _selectedNavIndex == 1
           ? FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => UploadPage()),
-          );
-        },
-        child: Icon(Icons.add),
-      )
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UploadPage()),
+                );
+              },
+              backgroundColor: Colors.yellow,
+              child: Icon(Icons.add, color: Colors.black),
+            )
           : null,
     );
   }
@@ -177,7 +181,9 @@ class _MainPageState extends State<MainPage> {
       case 6:
         return DessertPage(); // 디저트 페이지
       default:
-        return HomeTab(restaurantList: restaurantList, diaryRestaurantList: diaryRestaurantList); // 기본 페이지
+        return HomeTab(
+            restaurantList: restaurantList,
+            diaryRestaurantList: diaryRestaurantList); // 기본 페이지
     }
   }
 
@@ -188,7 +194,7 @@ class _MainPageState extends State<MainPage> {
         return DetailPage(
           title: '맛집 일기 전체보기',
           restaurantList: diaryRestaurantList,
-          showAppBar: true,
+          showAppBar: false,
         ); // 맛집일기 페이지
       case 2:
         return BulletinBoardPage(); // 게시판 페이지
@@ -197,7 +203,9 @@ class _MainPageState extends State<MainPage> {
       case 4:
         return MorePage(); // 더보기 페이지
       default:
-        return HomeTab(restaurantList: restaurantList, diaryRestaurantList: diaryRestaurantList); // 기본 홈 화면
+        return HomeTab(
+            restaurantList: restaurantList,
+            diaryRestaurantList: diaryRestaurantList); // 기본 홈 화면
     }
   }
 }
@@ -206,22 +214,28 @@ class HomeTab extends StatelessWidget {
   final List<Map<String, dynamic>> restaurantList;
   final List<Map<String, String>> diaryRestaurantList;
 
-  const HomeTab({Key? key, required this.restaurantList, required this.diaryRestaurantList}) : super(key: key);
+  const HomeTab(
+      {Key? key,
+      required this.restaurantList,
+      required this.diaryRestaurantList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // "리뷰 많은 식당" 부분만 스타일 변경
+// "리뷰 많은 식당" 부분만 스타일 변경
           ReviewSection(
             title: '리뷰 많은 식당',
             restaurantList: restaurantList
                 .map((item) => {
-              'name': item['name'],
-              'image': item['image'],
-              'address': item.containsKey('address') ? item['address'] : '서울 강남구 테헤란로',
-            })
+                      'name': item['name'],
+                      'image': item['image'],
+                      'address': item.containsKey('address')
+                          ? item['address']
+                          : '서울 강남구 테헤란로',
+                    })
                 .toList(), // Iterable을 List로 변환
             onTap: () {
               Navigator.push(
@@ -231,25 +245,25 @@ class HomeTab extends StatelessWidget {
                     title: '리뷰 많은 식당 전체보기',
                     restaurantList: restaurantList
                         .map((item) => {
-                      'name': item['name'],
-                      'image': item['image'],
-                      'address': '서울 강남구 테헤란로',
-                    })
+                              'name': item['name'],
+                              'image': item['image'],
+                              'address': '서울 강남구 테헤란로',
+                            })
                         .toList(), // Iterable을 List로 변환
                   ),
                 ),
               );
             },
           ),
-          // "최근 맛집 일기" 부분은 기존 스타일 유지
+// "최근 맛집 일기" 부분은 기존 스타일 유지
           Section(
             title: '최근 맛집 일기',
             restaurantList: diaryRestaurantList
                 .map((item) => {
-              'name': item['name'],
-              'image': item['image'],
-              'address': '서울 강남구 테헤란로',
-            })
+                      'name': item['name'],
+                      'image': item['image'],
+                      'address': '서울 강남구 테헤란로',
+                    })
                 .toList(),
             scrollDirection: Axis.vertical,
             onTap: () {
@@ -303,7 +317,7 @@ class CategoryButton extends StatelessWidget {
               label!,
               style: TextStyle(
                 fontSize: fontSize,
-                color: isSelected ? Colors.blue : Colors.black, // 선택된 탭은 파란색
+                color: isSelected ? Colors.yellow : Colors.black, // 선택된 탭은 파란색
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -312,7 +326,7 @@ class CategoryButton extends StatelessWidget {
               margin: const EdgeInsets.only(top: 4.0),
               height: 2.0,
               width: 20.0,
-              color: Colors.blue, // 밑줄 강조
+              color: Colors.yellow, // 밑줄 강조
             ),
         ],
       ),
@@ -346,11 +360,13 @@ class Section extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               GestureDetector(
                 onTap: onTap,
-                child: const Text('전체보기 >', style: TextStyle(color: Colors.blue)),
+                child:
+                    const Text('전체보기 >', style: TextStyle(color: Colors.black)),
               ),
             ],
           ),
@@ -361,9 +377,12 @@ class Section extends StatelessWidget {
               scrollDirection: scrollDirection,
               itemCount: restaurantList.length,
               itemBuilder: (context, index) {
-                final imagePath = restaurantList[index]['image'] ?? 'assets/images/default.png';
-                final restaurantName = restaurantList[index]['name'] ?? '가게 이름 없음';
-                final restaurantAddress = restaurantList[index]['address'] ?? '주소 정보 없음';
+                final imagePath = restaurantList[index]['image'] ??
+                    'assets/images/default.png';
+                final restaurantName =
+                    restaurantList[index]['name'] ?? '가게 이름 없음';
+                final restaurantAddress =
+                    restaurantList[index]['address'] ?? '주소 정보 없음';
 
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -382,7 +401,8 @@ class Section extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 16.0),
-                        Flexible( // 부모 크기에 맞게 조정되도록 변경
+                        Flexible(
+                          // 부모 크기에 맞게 조정되도록 변경
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -396,7 +416,8 @@ class Section extends StatelessWidget {
                               const SizedBox(height: 8.0),
                               Text(
                                 restaurantAddress,
-                                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.grey),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -404,7 +425,8 @@ class Section extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.arrow_forward_ios, color: Colors.yellow),
+                          icon: const Icon(Icons.arrow_forward_ios,
+                              color: Colors.yellow),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -430,9 +452,6 @@ class Section extends StatelessWidget {
   }
 }
 
-
-
-
 class DetailPage extends StatelessWidget {
   final String title;
   final List<Map<String, dynamic>> restaurantList;
@@ -442,7 +461,7 @@ class DetailPage extends StatelessWidget {
     Key? key,
     required this.title,
     required this.restaurantList,
-    this.showAppBar = true,
+    this.showAppBar = false,
   }) : super(key: key);
 
   @override
@@ -517,14 +536,184 @@ class DetailPage extends StatelessWidget {
   }
 }
 
-class BulletinBoardPage extends StatelessWidget {
+class BulletinBoardPage extends StatefulWidget {
   const BulletinBoardPage({Key? key}) : super(key: key);
+
+  @override
+  _BulletinBoardPageState createState() => _BulletinBoardPageState();
+}
+
+class _BulletinBoardPageState extends State<BulletinBoardPage> {
+  final List<Map<String, String>> _posts = [
+    {'title': '첫 번째 게시글', 'content': '안녕하세요! 첫 번째 게시글입니다.'},
+    {'title': '맛집 추천', 'content': '강남에 있는 맛집을 추천합니다.'},
+    {'title': '질문이 있습니다.', 'content': 'Flutter 게시판 기능은 어떻게 구현하나요?'},
+  ];
+
+  void _navigateToNewPostPage() async {
+    final newPost = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NewPostPage()),
+    );
+    if (newPost != null) {
+      setState(() {
+        _posts.add(newPost);
+      });
+    }
+  }
+
+  void _navigateToPostDetail(Map<String, String> post) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PostDetailPage(post: post),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: Text("게시판 내용"),
+// appBar: AppBar(
+//   title: Text('게시판'),
+//   backgroundColor: Colors.yellow,
+// ),
+      body: ListView.builder(
+        padding: EdgeInsets.all(8.0),
+        itemCount: _posts.length,
+        itemBuilder: (context, index) {
+          final post = _posts[index];
+          return GestureDetector(
+            onTap: () => _navigateToPostDetail(post),
+            child: Card(
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ListTile(
+                title: Text(
+                  post['title']!,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  post['content']!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+              ),
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _navigateToNewPostPage,
+        backgroundColor: Colors.yellow,
+        child: Icon(Icons.add, color: Colors.black),
+      ),
+    );
+  }
+}
+
+class NewPostPage extends StatefulWidget {
+  @override
+  _NewPostPageState createState() => _NewPostPageState();
+}
+
+class _NewPostPageState extends State<NewPostPage> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
+
+  void _submitPost() {
+    if (_titleController.text.isEmpty || _contentController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("제목과 내용을 모두 입력해주세요!")),
+      );
+      return;
+    }
+    Navigator.pop(
+      context,
+      {'title': _titleController.text, 'content': _contentController.text},
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('게시글 작성'),
+        backgroundColor: Colors.yellow,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '제목을 입력하세요',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextField(
+              controller: _contentController,
+              maxLines: 10,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '내용을 입력하세요',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Center(
+              child: ElevatedButton(
+                onPressed: _submitPost,
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.yellow,
+                  onPrimary: Colors.black,
+                ),
+                child: Text('게시글 등록'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PostDetailPage extends StatelessWidget {
+  final Map<String, String> post;
+
+  const PostDetailPage({Key? key, required this.post}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('게시글 상세'),
+        backgroundColor: Colors.yellow,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              post['title']!,
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              post['content']!,
+              style: TextStyle(fontSize: 18.0),
+            ),
+            SizedBox(height: 16.0),
+            Divider(),
+            Text(
+              '댓글 기능 추가 예정',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -536,8 +725,148 @@ class MorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: Text("더보기 페이지 내용"),
+      body: ListView(
+        padding: EdgeInsets.all(16.0),
+        children: [
+// 학식 정보
+          MorePageItem(
+            icon: Icons.restaurant_menu,
+            title: '학식 정보',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MealInfoPage()),
+              );
+            },
+          ),
+
+// 앱 설정
+          MorePageItem(
+            icon: Icons.settings,
+            title: '앱 설정',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AppSettingsPage()),
+              );
+            },
+          ),
+
+// 고객센터
+          MorePageItem(
+            icon: Icons.support_agent,
+            title: '고객센터',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CustomerSupportPage()),
+              );
+            },
+          ),
+
+// 약관 및 정책
+          MorePageItem(
+            icon: Icons.policy,
+            title: '약관 및 정책',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TermsAndPoliciesPage()),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MorePageItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  const MorePageItem({
+    Key? key,
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 16.0),
+      child: ListTile(
+        leading: Icon(icon, size: 40, color: Colors.yellow),
+        title: Text(title,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+// 학식 정보 페이지
+class MealInfoPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('학식 정보'),
+        backgroundColor: Colors.yellow,
+      ),
+      body: Center(
+        child: Text('학식 정보 페이지입니다.'),
+      ),
+    );
+  }
+}
+
+// 앱 설정 페이지
+class AppSettingsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('앱 설정'),
+        backgroundColor: Colors.yellow,
+      ),
+      body: Center(
+        child: Text('앱 설정 페이지입니다.'),
+      ),
+    );
+  }
+}
+
+// 고객센터 페이지
+class CustomerSupportPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('고객센터'),
+        backgroundColor: Colors.yellow,
+      ),
+      body: Center(
+        child: Text('고객센터 페이지입니다.'),
+      ),
+    );
+  }
+}
+
+// 약관 및 정책 페이지
+class TermsAndPoliciesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('약관 및 정책'),
+        backgroundColor: Colors.yellow,
+      ),
+      body: Center(
+        child: Text('약관 및 정책 페이지입니다.'),
       ),
     );
   }
@@ -609,11 +938,13 @@ class ReviewSection extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               GestureDetector(
                 onTap: onTap,
-                child: const Text('전체보기 >', style: TextStyle(color: Colors.blue)),
+                child:
+                    const Text('전체보기 >', style: TextStyle(color: Colors.black)),
               ),
             ],
           ),
@@ -623,15 +954,18 @@ class ReviewSection extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: restaurantList.length,
               itemBuilder: (context, index) {
-                final imagePath = restaurantList[index]['image'] ?? 'assets/images/default.png';
-                final restaurantName = restaurantList[index]['name'] ?? '가게 이름 없음';
-                final restaurantAddress = restaurantList[index]['address'] ?? '주소 정보 없음';
+                final imagePath = restaurantList[index]['image'] ??
+                    'assets/images/default.png';
+                final restaurantName =
+                    restaurantList[index]['name'] ?? '가게 이름 없음';
+                final restaurantAddress =
+                    restaurantList[index]['address'] ?? '주소 정보 없음';
 
                 return Padding(
                   padding: const EdgeInsets.only(right: 16.0),
                   child: Stack(
                     children: [
-                      // 이미지 부분
+// 이미지 부분
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
                         child: Image.asset(
@@ -641,7 +975,7 @@ class ReviewSection extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      // 투명도 있는 가게 정보 박스
+// 투명도 있는 가게 정보 박스
                       Positioned(
                         bottom: 16.0,
                         left: 16.0,
@@ -655,7 +989,7 @@ class ReviewSection extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // 가게 이름과 주소
+// 가게 이름과 주소
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -670,12 +1004,15 @@ class ReviewSection extends StatelessWidget {
                                     const SizedBox(height: 4.0),
                                     Row(
                                       children: [
-                                        const Icon(Icons.location_on, color: Colors.orange, size: 16.0),
+                                        const Icon(Icons.location_on,
+                                            color: Colors.orange, size: 16.0),
                                         const SizedBox(width: 4.0),
                                         Expanded(
                                           child: Text(
                                             restaurantAddress,
-                                            style: const TextStyle(fontSize: 14, color: Colors.black87),
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black87),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
@@ -685,11 +1022,12 @@ class ReviewSection extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              // 화살표 아이콘
+// 화살표 아이콘
                               IconButton(
-                                icon: const Icon(Icons.arrow_forward_ios, color: Colors.yellow),
+                                icon: const Icon(Icons.arrow_forward_ios,
+                                    color: Colors.yellow),
                                 onPressed: () {
-                                  // 버튼 클릭 시 상세 페이지로 이동
+// 버튼 클릭 시 상세 페이지로 이동
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -716,4 +1054,3 @@ class ReviewSection extends StatelessWidget {
     );
   }
 }
-

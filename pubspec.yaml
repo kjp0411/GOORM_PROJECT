@@ -39,6 +39,7 @@ dependencies:
   provider: ^6.0.0
   image_picker: ^0.8.4+4
   http: ^0.13.3 # 서버로 데이터를 전송하기 위해 http 패키지를 사용합니다.
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -62,12 +63,16 @@ flutter:
     - assets/images/b.png
     - assets/images/c.png
     - assets/images/logo1.png
+    - assets/images/logo2.png
+    - assets/images/logo3.png
+    - assets/images/logo4.png
     - assets/images/한식.png
     - assets/images/중식.png
     - assets/images/분식.png
     - assets/images/패스트푸드.png
     - assets/images/일식.png
     - assets/images/디저트.png
+    - assets/images/kakao_icon.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
