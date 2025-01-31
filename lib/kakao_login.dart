@@ -9,20 +9,14 @@ class KakaoLogin implements SocialLogin {
       if (isInstalled) {
         try {
           await UserApi.instance.loginWithKakaoTalk();
-          // JWT 토큰을 받아오는 부분
-          AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
-          print('JWT Token: ${tokenInfo.id}');
-          return true;
+          return _printTokens(); // 토큰 출력 함수 호출
         } catch (e) {
           return false;
         }
       } else {
         try {
           await UserApi.instance.loginWithKakaoAccount();
-          // JWT 토큰을 받아오는 부분
-          AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
-          print('JWT Token: ${tokenInfo.id}');
-          return true;
+          return _printTokens(); // 토큰 출력 함수 호출
         } catch (e) {
           return false;
         }
@@ -38,6 +32,23 @@ class KakaoLogin implements SocialLogin {
       await UserApi.instance.logout();
       return true;
     } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> _printTokens() async {
+    try {
+      OAuthToken? token = await TokenManagerProvider.instance.manager.getToken();
+      if (token != null) {
+        print('JWT Access Token: ${token.accessToken}');
+        print('Refresh Token: ${token.refreshToken}');
+        return true;
+      } else {
+        print('토큰 정보를 가져올 수 없습니다.');
+        return false;
+      }
+    } catch (e) {
+      print('토큰 가져오기 실패: $e');
       return false;
     }
   }
