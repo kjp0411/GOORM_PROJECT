@@ -7,7 +7,7 @@ import 'package:provider/provider.dart'; // Provider import
 import 'package:goorm_project/screen/home_screen.dart';
 
 void main() {
-  KakaoSdk.init(nativeAppKey: '4cbec296cd4ae6f59d26e4d7a62aa36b');
+  KakaoSdk.init(nativeAppKey: '');
   runApp(const MyApp());
 }
 
